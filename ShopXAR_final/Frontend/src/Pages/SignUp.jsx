@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
-import { register } from '../Pages/services/authService'; // Confirm path is correct
+// src/Pages/SignUp.jsx
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { register } from '../Pages/services/authService';
+import UserContext from '../context/UserContext';
 
 function SignUp() {
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);           // <-- add context
+
   const [form, setForm] = useState({
     name: '',
     email: '',
     mobile: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
 
   const [loading, setLoading] = useState(false);
 
-  // Update form state on input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Form submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -32,38 +36,28 @@ function SignUp() {
     try {
       const { name, email, mobile, password } = form;
 
-      // Debug: log form data before sending
-      console.log('Submitting registration:', { name, email, mobile, password });
-
       const res = await register({ name, email, mobile, password });
 
       if (res?.token) {
-        // Save token to localStorage
+        // 1️⃣  Persist token for refresh
         localStorage.setItem('token', res.token);
-        alert('✅ Registered successfully!');
 
-        // Reset form fields after successful registration
-        setForm({
-          name: '',
-          email: '',
-          mobile: '',
-          password: '',
-          confirmPassword: ''
-        });
+        // 2️⃣  Push user data into global context
+        setUser({ token: res.token, name, email });
+
+        alert('✅ Registered successfully!');
+        navigate('/');                // Redirect to homepage
       } else {
         throw new Error('No token received from server');
       }
     } catch (err) {
       console.error('❌ Registration error:', err);
-
-      // Graceful error message display
       alert(err?.response?.data?.message || err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
   };
 
-  // Inline styles for black & white responsive theme
   const styles = {
     container: {
       display: 'flex',
@@ -103,9 +97,6 @@ function SignUp() {
       boxSizing: 'border-box',
       outline: 'none',
       transition: 'border-color 0.3s ease',
-    },
-    inputFocus: {
-      borderColor: '#fff',
     },
     button: {
       padding: '12px',
