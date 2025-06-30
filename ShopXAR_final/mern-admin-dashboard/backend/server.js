@@ -1,16 +1,27 @@
-// server.js
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from 'url';
 
-import userRoutes from "./routes/userRoutes.js"; // ✅ import your routes
-import modelUploadRoutes from "./routes/modelUploadRoutes.js"; // ✅ NEW: import model upload routes
+// Route imports
+import userRoutes from "./routes/userRoutes.js";
+import modelUploadRoutes from "./routes/modelUploadRoutes.js";
+import dashboardRoutes from "./routes/dashboard.js";
+import auditLogRoutes from './routes/auditLogs.js'; // ✅ Audit logs route
+
+// Optional: import AuditLog model directly if needed elsewhere
+// import AuditLog from './models/auditLogModel.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// To fix __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(cors());
@@ -25,16 +36,19 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Routes
+// Basic test route
 app.get("/", (req, res) => {
   res.send("Welcome to the 3D Portal Admin API");
 });
 
-// ✅ Use your user routes
+// Mount API routes
 app.use("/api/users", userRoutes);
-
-// ✅ NEW: Use your model upload routes
 app.use("/api/model-uploads", modelUploadRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/audit-logs", auditLogRoutes); // ✅ Dynamic Audit logs route
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // Start server
 app.listen(PORT, () => {
