@@ -1,23 +1,27 @@
 // src/App.jsx
-import React, { Suspense, lazy, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider, default as UserContext } from './context/UserContext';
+import { ThemeProvider, ThemeContext } from './context/ThemeContext';
 
-// ---------- Lazy-loaded page imports ----------
-const Home               = lazy(() => import('./Pages/Home'));
-const Getstarted         = lazy(() => import('./Pages/Getstarted'));
-const Uploadpage         = lazy(() => import('./Pages/Uploadpage'));
-const StartAndUpload     = lazy(() => import('./Pages/Startanduploadvideo'));
-const Contact            = lazy(() => import('./Pages/Contact'));
-const VideoTutorials     = lazy(() => import('./Pages/Videotutorial'));
-const ProfileDashboard   = lazy(() => import('./Pages/Profiledashboard'));
-const Login              = lazy(() => import('./Pages/Login'));
-const SignUp             = lazy(() => import('./Pages/SignUp'));
+
+// ---------- Direct page imports ----------
+import Home from './Pages/Home';
+import Getstarted from './Pages/Getstarted';
+import Uploadpage from './Pages/Uploadpage';
+import StartAndUpload from './Pages/Startanduploadvideo';
+import Contact from './Pages/Contact';
+import VideoTutorials from './Pages/Videotutorial';
+import ProfileDashboard from './Pages/Profiledashboard';
+import Login from './Pages/Login';
+import SignUp from './Pages/SignUp';
+import AnalyticsPage from './Pages/Analytics';
+import CustomizePage from './Pages/Customize';
 
 // ---------- Utility: scroll to top on every route change ----------
 function ScrollToTop() {
   const { pathname } = window.location;
-  React.useEffect(() => window.scrollTo(0, 0), [pathname]);
+  useEffect(() => window.scrollTo(0, 0), [pathname]);
   return null;
 }
 
@@ -27,71 +31,66 @@ function ProtectedRoute({ children }) {
   return user?.token ? children : <Navigate to="/signin" replace />;
 }
 
-// ---------- Optional tiny loader for Suspense ----------
-function Loader() {
+// ---------- Utility: apply theme class to <html> ----------
+function GlobalThemeSync() {
+  const { theme } = useContext(ThemeContext);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
+  return null;
+}
+
+function AppContent() {
   return (
-    <div style={{ color: '#fff', textAlign: 'center', marginTop: '40px' }}>
-      Loading…
-    </div>
+    <Routes>
+      {/* Public pages */}
+      <Route path="/" element={<Home />} />
+      <Route path="/getstarted" element={<Getstarted />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/videotutorials" element={<VideoTutorials />} />
+
+      {/* Auth pages */}
+      <Route path="/signin" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+
+      {/* Private pages */}
+      <Route path="/uploadpage" element={<ProtectedRoute><Uploadpage /></ProtectedRoute>} />
+      <Route path="/startanduploadvideo" element={<ProtectedRoute><StartAndUpload /></ProtectedRoute>} />
+      <Route path="/profiledashboard" element={<ProtectedRoute><ProfileDashboard /></ProtectedRoute>} />
+      <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
+      <Route path="/customize" element={<ProtectedRoute><CustomizePage /></ProtectedRoute>} />
+
+      {/* 404 */}
+      <Route
+        path="*"
+        element={
+          <h1 className="text-center mt-10 text-white dark:text-white text-xl">
+            404 - Page Not Found
+          </h1>
+        }
+      />
+    </Routes>
   );
 }
 
 function App() {
   return (
-    <UserProvider>
-      <Router>
-        <ScrollToTop />
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            {/* Public pages */}
-            <Route path="/"                element={<Home />} />
-            <Route path="/getstarted"      element={<Getstarted />} />
-            <Route path="/contact"         element={<Contact />} />
-            <Route path="/videotutorials"  element={<VideoTutorials />} />
-
-            {/* Auth pages */}
-            <Route path="/signin"          element={<Login />} />
-            <Route path="/signup"          element={<SignUp />} />
-
-            {/* Private pages */}
-            <Route
-              path="/uploadpage"
-              element={
-                <ProtectedRoute>
-                  <Uploadpage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/startanduploadvideo"
-              element={
-                <ProtectedRoute>
-                  <StartAndUpload />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profiledashboard"
-              element={
-                <ProtectedRoute>
-                  <ProfileDashboard />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* 404 */}
-            <Route
-              path="*"
-              element={
-                <h1 style={{ color: 'white', textAlign: 'center', marginTop: '40px' }}>
-                  404 - Page Not Found
-                </h1>
-              }
-            />
-          </Routes>
-        </Suspense>
-      </Router>
-    </UserProvider>
+    <ThemeProvider>
+      <UserProvider>
+        <Router>
+          <ScrollToTop />
+          <GlobalThemeSync />
+          <AppContent />
+        </Router>
+      </UserProvider>
+    </ThemeProvider>
   );
 }
 
