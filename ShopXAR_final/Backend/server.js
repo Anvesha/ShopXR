@@ -30,7 +30,7 @@ app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
 
 // API routes
 app.use('/api/upload', uploadRoutes);
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes); // ✅ Correct
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,19 +1,37 @@
 // src/services/authService.js
-import axios from 'axios';
 
 const API_BASE = 'http://localhost:5000'; // Backend base URL
 
 export const register = async (userData) => {
-  const response = await axios.post(`${API_BASE}/api/register`, userData);
-  return response.data;
+  const res = await fetch(`${API_BASE}/api/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || 'Registration failed');
+  }
+
+  return await res.json();
 };
 
 export const login = async (credentials) => {
-  try {
-    const response = await axios.post(`${API_BASE}/api/auth/login`, credentials);
-    return response.data; // Expecting { token, user, ... }
-  } catch (error) {
-    console.error('Login error:', error?.response?.data || error.message);
-    throw error;
+  const res = await fetch(`${API_BASE}/api/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || 'Login failed');
   }
+
+  return await res.json(); // { token, user, ... }
 };
