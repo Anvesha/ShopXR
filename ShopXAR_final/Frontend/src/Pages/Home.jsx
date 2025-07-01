@@ -80,33 +80,35 @@ const Home = () => {
           </div>
         )}
 
-        {/* Hero Section */}
-        <section className="text-center px-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">Welcome</h1>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-2">
-            Engage customers like never before
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl font-semibold mt-2">
-            Sell more with ShopXAR’s 3D & AR!
-          </p>
-        </section>
+      <section className="text-center px-4">
+  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black">Welcome</h1>
+  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-2 text-black">
+    Engage customers like never before
+  </h2>
+  <p className="text-base sm:text-lg md:text-xl font-semibold mt-2 text-black">
+    Sell more with ShopXAR’s 3D & AR!
+  </p>
+</section>
+
 
         {/* Feature Cards */}
         <section className="flex flex-col md:flex-row justify-center items-center gap-8 mt-10 px-4 sm:px-6 md:px-10">
+          {/* Card 1 */}
           <Link to="/getstarted" className="w-full md:w-[500px] transform transition duration-300 hover:scale-105 hover:shadow-2xl">
-            <div className="bg-white dark:bg-neutral-900 text-black dark:text-white rounded-2xl p-6 sm:p-8 shadow-lg text-center h-full transition-colors duration-300">
+            <div className="bg-black text-white rounded-2xl p-6 sm:p-8 shadow-lg text-center h-full transition-colors duration-300">
               <h3 className="text-xl sm:text-2xl font-bold mb-3">Get Started Now</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-5">
+              <p className="text-white text-sm sm:text-base mb-5">
                 Get Started now with 3D customization and Custom Configuration
               </p>
               <img src="/assets/getstart.png" alt="Start Illustration" className="mx-auto h-44 sm:h-52 object-contain" />
             </div>
           </Link>
 
+          {/* Card 2 */}
           <Link to="/startanduploadvideo" className="w-full md:w-[500px] transform transition duration-300 hover:scale-105 hover:shadow-2xl">
-            <div className="bg-white dark:bg-neutral-900 text-black dark:text-white rounded-2xl p-6 sm:p-8 shadow-lg text-center h-full transition-colors duration-300">
+            <div className="bg-black text-white rounded-2xl p-6 sm:p-8 shadow-lg text-center h-full transition-colors duration-300">
               <h3 className="text-xl sm:text-2xl font-bold mb-3">Get Your 3D Models Now</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-5">
+              <p className="text-white text-sm sm:text-base mb-5">
                 Contact us and we'll get you a professional 3D model and help you get started with the app in no time
               </p>
               <img src="/assets/get.png" alt="3D Model Illustration" className="mx-auto h-44 sm:h-52 object-contain" />
