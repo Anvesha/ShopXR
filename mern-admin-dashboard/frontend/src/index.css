@@ -1,0 +1,50 @@
+/* src/index.css */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif; /* Applied font */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0d0d0d; /* Dark background as seen in images */
+  color: #e0e0e0; /* Light text color */
+ 
+  font-size: 13px; /* or try 12px for even smaller */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Add any other global styles here, such as: */
+button {
+  font-family: 'Poppins', sans-serif;
+}
+
+input, select, textarea {
+  font-family: 'Poppins', sans-serif;
+}
+/* index.css */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 12px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* stack cards vertically */
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu {
+    display: none;
+  }
+}
